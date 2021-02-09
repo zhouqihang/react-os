@@ -1,7 +1,12 @@
+/**
+ * @description 顶部状态栏
+ * @author zhouqihang
+ */
 import React, { PureComponent } from 'react';
 
 import Time from './Time';
 import AppMenu from './AppMenu';
+import Icon from '../../components/Icon';
 
 const prefix = 'os-statusbar';
 
@@ -13,7 +18,9 @@ class StatusBar extends PureComponent {
     render() {
         return (
             <section className={prefix}>
-                <div className="system-menu"></div>
+                <div className="system-menu hover-bg">
+                    <Icon name="Apple" />
+                </div>
                 <div className="app-menu">
                     <AppMenu />
                 </div>
