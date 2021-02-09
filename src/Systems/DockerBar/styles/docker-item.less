@@ -1,0 +1,24 @@
+@prefix: ~'os-docker-app';
+
+.@{prefix} {
+  width: 70px;
+  display: inline-block;
+  &_icon {
+    width: 100%;
+    height: 70px;
+    text-align: center;
+    line-height: 70px;
+    font-size: 70px;
+  }
+  &_dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background-color: #111;
+    margin: 0 auto;
+    display: none;
+  }
+  &.active &_dot {
+    display: block;
+  }
+}
