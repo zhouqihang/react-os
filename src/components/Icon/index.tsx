@@ -4,7 +4,7 @@
  * 
  * 所有图标均来自iconfont，以symbol方式引用
  */
-import React, { FunctionComponent, HTMLProps } from 'react';
+import React, { FunctionComponent, SVGProps } from 'react';
 
 export interface IconProps {
   name: string;
@@ -12,13 +12,13 @@ export interface IconProps {
 
 const iconPrefix = 'icon';
 
-const Icon: FunctionComponent<IconProps & HTMLProps<HTMLOrSVGElement>> = (props) => {
-  const { name } = props;
+const Icon: FunctionComponent<IconProps & SVGProps<SVGSVGElement>> = (props) => {
+  const { name, ...otherProps } = props;
 
   const iconName = `#${iconPrefix}-${name}`;
 
   return (
-    <svg className="icon" aria-hidden="true">
+    <svg className="icon" aria-hidden="true" {...otherProps}>
         <use xlinkHref={iconName}></use>
     </svg>
   )
