@@ -1,4 +1,8 @@
-import React, { SFC, memo, HTMLProps } from 'react';
+/**
+ * @description 状态栏时间组件
+ * @author zhouqihang
+ */
+import React, { FunctionComponent, memo, HTMLProps } from 'react';
 import moment from 'moment';
 import classnames from 'classnames';
 
@@ -22,7 +26,7 @@ const weekMap: Record<string, string> = {
     '0': '星期日',
 }
 
-const Time: SFC<ITimeProps & HTMLProps<HTMLDivElement>> = (props) => {
+const Time: FunctionComponent<ITimeProps & HTMLProps<HTMLDivElement>> = (props) => {
     const { showTime, showDate, showWeek, className, ...otherProps } = props;
 
     let time = new Date();

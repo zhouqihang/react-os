@@ -1,9 +1,9 @@
-import React, { SFC } from 'react';
+import React, { FunctionComponent } from 'react';
 
 import Desktop from './Systems/Desktop';
 import StatusBar from './Systems/StatusBar';
 
-const App: SFC = (props) => {
+const App: FunctionComponent = (props) => {
     return (
         <>
             <Desktop background="/desktops/1.jpg">

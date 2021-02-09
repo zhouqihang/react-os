@@ -2,12 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import App from './App';
+import components from './components';
 
 import './assets/styles/index.less';
 
 window.$os = {
     request: null,
-    uiKit: null,
+    UIKit: components,
     utils: null,
     version: process.env.version as string,
 }

@@ -1,3 +1,7 @@
+/**
+ * @description 桌面组件
+ * @author zhouqihang
+ */
 import React, { PureComponent, CSSProperties } from 'react';
 
 interface IDesktopProps {
