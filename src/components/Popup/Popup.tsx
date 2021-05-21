@@ -4,7 +4,7 @@
  * @time 2021-02-12 19:32:38
  * @description 弹出框组件
  */
-import React, { FunctionComponent, CSSProperties, MouseEventHandler } from 'react';
+import React, { FunctionComponent, CSSProperties, useEffect } from 'react';
 import classnames from 'classnames';
 
 import Portal from '../../utils/Portal';
@@ -14,15 +14,19 @@ interface IPopupProps {
   className?: string;
   style?: CSSProperties;
   visible?: boolean;
-  maskClassName?: string;
+  mounted?: () => void;
 }
 
 const Popup: FunctionComponent<IPopupProps> = (props) => {
-  const { className, style, visible, maskClassName } = props;
+  const { className, style, visible, children, mounted } = props;
+
+  useEffect(() => {
+    mounted && mounted();
+  }, []);
   return (
     <Portal style={{ display: visible ? 'block' : 'none' }}>
       <div className={classnames(prefix, className)} style={style}>
-        Popup
+        {children}
       </div>
     </Portal>
   )
