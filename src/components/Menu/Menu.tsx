@@ -8,27 +8,28 @@ import React, { CSSProperties, ReactNode, PureComponent } from 'react';
 import classnames from 'classnames';
 import Trigger from '../Trigger';
 import Icon from '../Icon';
+import { glassBackground } from '../../assets/styles/classNames';
 
 const prefix = 'os-menu';
 type menuId = number | string;
-interface IMenuItem {
+export interface IMenuItem {
   id: menuId;
   content: ReactNode,
   suffix?: ReactNode,
-  children?: menuList;
+  children?: menuListType;
 }
-type menuList = Array<IMenuItem | IMenuItem[]>;
-type handlerType = 'click' | 'hover';
+export type menuListType = Array<IMenuItem | IMenuItem[]>;
+export type handlerType = 'click' | 'hover';
 interface IMenuProps {
   className?: string;
   style?: CSSProperties;
-  menus: menuList;
+  menus: menuListType;
   handler?: (type: handlerType, id: menuId, item: IMenuItem) => void;
 }
 
 class Menu extends PureComponent<IMenuProps> {
 
-  setPositions = (trigger: Element | null | Text, content: HTMLElement) => {
+  setPositions = (trigger: Element | null | Text, content: Element | null | Text) => {
     if (!trigger || !content) {
       return {};
     }
@@ -37,13 +38,17 @@ class Menu extends PureComponent<IMenuProps> {
     const triggerRect = (trigger as Element).getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
     console.log(triggerRect, containerRect);
+    // 计算X方向坐标
+    let left = triggerRect.right; // 默认为触发对象右边
+    // 触发对象右边至窗口最右侧空间不够，移动到左侧
+    if (window.innerWidth - triggerRect.right < containerRect.width) {
+      left = triggerRect.left - containerRect.width;
+    }
     // 计算Y方向
-    let top = triggerRect.bottom;     // 因为是系统菜单，所以默认在下方
-    // 计算X方向
-    let left = triggerRect.left;          // 默认和触发对象左对齐
-    if (window.innerWidth - triggerRect.left < containerRect.width) {
-      if (triggerRect.right >= containerRect.width) {
-        left = triggerRect.right - containerRect.width;
+    let top = triggerRect.top;     // 默认与触发对象平齐
+    if (window.innerHeight - triggerRect.top < containerRect.height) {
+      if (triggerRect.bottom > containerRect.height) {
+        top = window.innerHeight - containerRect.height;
       }
     }
 
@@ -71,7 +76,7 @@ class Menu extends PureComponent<IMenuProps> {
         <Trigger
           key={'trigger' + id}
           trigger="click"
-          content={this.renderMenu(children as menuList)}
+          content={(<Menu menus={menu.children as menuListType} />)}
           setPositions={this.setPositions}
         >
           {li}
@@ -85,15 +90,17 @@ class Menu extends PureComponent<IMenuProps> {
     return menuList.map(menu => this.renderItem(menu));
   }
 
-  renderMenu = (data: menuList) => {
+  render() {
+    const { menus } = this.props;
     return (
       <ul
         className={classnames(
-          prefix
+          prefix,
+          glassBackground
         )}
       >
         {
-          data.map((item: IMenuItem | IMenuItem[]) => {
+          menus.map((item: IMenuItem | IMenuItem[]) => {
             if (Array.isArray(item)) {
               return this.renderItemGroup(item);
             }
@@ -103,14 +110,6 @@ class Menu extends PureComponent<IMenuProps> {
           })
         }
       </ul>
-    )
-  }
-  render() {
-    const { className, style, children, menus } = this.props;
-    return (
-      <Trigger trigger="click" content={this.renderMenu(menus)} setPositions={this.setPositions}>
-        {children}
-      </Trigger>
     )
   }
 }
