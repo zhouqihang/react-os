@@ -28,7 +28,7 @@ interface ITriggerProps {
   content: ReactNode;
   trigger?: TriggerType;
   onChange?: (visible: boolean) => void;
-  setPositions: (trigger: Element | null | Text, element: HTMLElement) => IPosition;
+  setPositions: (trigger: Element | null | Text, element: Element | null | Text) => IPosition;
 }
 
 interface ITriggerStates {
@@ -103,7 +103,7 @@ class Trigger extends Component<ITriggerProps, ITriggerStates> {
   }
 
   popupMounted = () => {
-    const position = this.props.setPositions(findDOMNode(this), this.popupRef.current);
+    const position = this.props.setPositions(findDOMNode(this), findDOMNode(this.popupRef.current));
     this.setState({ position });
   }
 
@@ -126,9 +126,13 @@ class Trigger extends Component<ITriggerProps, ITriggerStates> {
     }
 
     const { position } = this.state;
+    const popupStyle = {
+      visibility: position ? 'visible' : 'hidden',
+      ...position
+    }
 
     return (
-      <Popup visible key="content" mounted={this.popupMounted} style={position || {}}>
+      <Popup visible key="content" mounted={this.popupMounted} style={popupStyle as CSSProperties}>
         { element }
       </Popup>
     );
