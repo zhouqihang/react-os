@@ -3,10 +3,12 @@
  * @author zhouqihang
  */
 import React, { PureComponent } from 'react';
+import classnames from 'classnames';
 
 import Time from './Time';
 import AppMenu from './AppMenu';
 import Icon from '../../components/Icon';
+import { glassBackground } from '../../assets/styles/classNames';
 
 const prefix = 'os-statusbar';
 
@@ -17,7 +19,7 @@ class StatusBar extends PureComponent {
 
     render() {
         return (
-            <section className={prefix}>
+            <section className={classnames(prefix, glassBackground)}>
                 <div className="system-menu hover-bg">
                     <Icon name="Apple" />
                 </div>
