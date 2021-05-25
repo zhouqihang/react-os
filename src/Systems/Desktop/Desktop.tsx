@@ -59,7 +59,7 @@ class Desktop extends PureComponent<IDesktopProps, IDesktopState> {
     render() {
         const { children } = this.props;
         const { style } = this.state;
-        console.log(this.props, this.state);
+
         return (
             <section style={Object.assign({ background: this.getBackgroundString() }, backgroundStyle)} className={prefix}>
                 {children}

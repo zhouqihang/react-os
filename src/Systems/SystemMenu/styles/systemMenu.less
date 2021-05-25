@@ -1,0 +1,31 @@
+@prefix: ~'os-menu';
+
+.@{prefix} {
+  width: auto;
+  background-color: rgba(255, 255, 255, 0.5);
+  color: #000;
+  user-select: none;
+  &_item {
+    display: flex;
+    justify-content: space-between;
+    background-color: #fff;
+    &:hover {
+      color: #fff;
+      background-color: #5896f8;
+    }
+    > div {
+      white-space: nowrap;
+    }
+    &__content {
+      margin-right: auto;
+    }
+    &__suffix {
+      margin: 0 8px;
+      width: 60px;
+      text-align: right;
+    }
+    &__sub {
+      
+    }
+  }
+}
