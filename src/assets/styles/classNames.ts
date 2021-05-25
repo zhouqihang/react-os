@@ -1,0 +1,1 @@
+export const glassBackground = 'c_glass_bg';

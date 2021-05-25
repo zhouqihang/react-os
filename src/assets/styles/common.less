@@ -1,0 +1,16 @@
+// 白色半透明背景
+.c_glass_bg {
+  position: absolute;
+  overflow: hidden;
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    filter: blur(20px);
+    background-color: rgba(255, 255, 255, 0.6);
+    z-index: -1;
+}
+}
