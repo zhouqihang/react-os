@@ -20,7 +20,7 @@ const DockerBar: FunctionComponent<IDockerBarProps & HTMLProps<HTMLDivElement>> 
   const { apps, activeAppIds, className, ...otherProps } = props;
 
   return (
-    <section className={`${prefix}-container`}>
+    <section className={`${prefix}-container`} id="os-docker">
       <div className={cn(prefix, className)} {...otherProps}>
         {
           apps.map(app => (

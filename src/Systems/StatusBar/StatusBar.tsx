@@ -12,14 +12,14 @@ import { glassBackground } from '../../assets/styles/classNames';
 
 const prefix = 'os-statusbar';
 
-class StatusBar extends PureComponent {
+class StatusBar extends PureComponent<React.HTMLAttributes<HTMLElement>> {
     constructor(props: any) {
         super(props);
     }
 
     render() {
         return (
-            <section className={classnames(prefix, glassBackground)}>
+            <section className={classnames(prefix, glassBackground)} {...this.props}>
                 <div className="system-menu hover-bg">
                     <Icon name="Apple" />
                 </div>

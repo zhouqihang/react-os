@@ -4,7 +4,7 @@
  */
 import React, { PureComponent, CSSProperties } from 'react';
 
-interface IDesktopProps {
+interface IDesktopProps extends React.HTMLAttributes<HTMLElement> {
     /** background eg: url, color */
     background: string;
 }
@@ -57,11 +57,15 @@ class Desktop extends PureComponent<IDesktopProps, IDesktopState> {
     }
 
     render() {
-        const { children } = this.props;
+        const { children, ...others } = this.props;
         const { style } = this.state;
 
         return (
-            <section style={Object.assign({ background: this.getBackgroundString() }, backgroundStyle)} className={prefix}>
+            <section
+                style={Object.assign({ background: this.getBackgroundString() }, backgroundStyle)}
+                className={prefix}
+                {...others}
+            >
                 {children}
             </section>
         )
