@@ -1,0 +1,41 @@
+@prefix: ~'os-window_header';
+
+.@{prefix} {
+  padding: 3px 10px;
+  background-color: #fff;
+  &__handers {
+    display: inline-block;
+    &_close, &_shrink, &_magnify {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background-color: red;
+      display: inline-block;
+      margin-right: 5px;
+      position: relative;
+      &:hover::after {
+        content: '';
+        width: 3px;
+        height: 3px;
+        background-color: #333;
+        border-radius: 50%;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+      }
+    }
+    &_close {
+      background-color: #ff5f57;
+    }
+    &_shrink {
+      background-color: #febe2f;
+    }
+    &_magnify {
+      background-color: #26ca3f;
+    }
+  }
+
+}

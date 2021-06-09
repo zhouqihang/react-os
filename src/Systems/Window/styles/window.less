@@ -1,0 +1,81 @@
+@prefix: ~'os-window';
+@lineW: 2px;
+
+.@{prefix} {
+  box-shadow: 0px 0px 20px 10px rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+  overflow: hidden;
+  position: absolute;
+  &__line {
+    position: absolute;
+    background-color: red;
+    &.left {
+      width: @lineW;
+      height: calc(100% - @lineW * 2);
+      left: 0;
+      top: @lineW;
+      &:hover {
+        cursor: ew-resize	;
+      }
+    }
+    &.right {
+      width: @lineW;
+      height: calc(100% - @lineW * 2);
+      right: 0;
+      top: @lineW;
+      &:hover {
+        cursor: ew-resize	;
+      }
+    }
+    &.top {
+      width: calc(100% - @lineW * 2);
+      height: @lineW;
+      top: 0;
+      left: @lineW;
+      cursor: ns-resize	;
+    }
+    &.bottom {
+      width: calc(100% - @lineW * 2);
+      height: @lineW;
+      left: @lineW;
+      bottom: 0;
+      cursor: ns-resize	;
+    }
+    &.left-top {
+      width: @lineW * 2;
+      height: @lineW * 2;
+      left: 0;
+      top: 0;
+      &:hover {
+        cursor: nwse-resize;
+      }
+    }
+    &.right-top {
+      width: @lineW * 2;
+      height: @lineW * 2;
+      top: 0;
+      right: 0;
+      &:hover {
+        cursor: nesw-resize;
+      }
+    }
+    &.left-bottom {
+      width: @lineW * 2;
+      height: @lineW * 2;
+      left: 0;
+      bottom: 0;
+      &:hover {
+        cursor: nesw-resize;
+      }
+    }
+    &.right-bottom {
+      width: @lineW * 2;
+      height: @lineW * 2;
+      bottom: 0;
+      right: 0;
+      &:hover {
+        cursor: nwse-resize;
+      }
+    }
+  }
+}
