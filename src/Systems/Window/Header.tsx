@@ -7,7 +7,7 @@
 import React, { FunctionComponent, CSSProperties, ReactNode } from 'react';
 import classnames from 'classnames';
 
-const prefix = 'os-window_header';
+export const prefix = 'os-window_header';
 interface IHeaderProps {
   className?: string;
   style?: CSSProperties;

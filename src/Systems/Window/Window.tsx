@@ -7,7 +7,7 @@
 import React, { Component, CSSProperties } from 'react';
 import classnames from 'classnames';
 
-import Header from './Header';
+import Header, { prefix as headerClassName } from './Header';
 
 const prefix = 'os-window';
 interface IWindowProps {
@@ -32,7 +32,6 @@ interface IWindowState {
 }
 
 // TODO
-// 移动功能
 // head和footer自定义功能
 
 const DEFAULT_WIDTH = 700;
@@ -78,8 +77,14 @@ class Window extends Component<IWindowProps, IWindowState> {
   private currentTop: number;
   private currentLeft: number;
 
+  // window容器ref对象
   private element: React.RefObject<HTMLDivElement> = React.createRef();
 
+  /**
+   * 获取窗口缩放的事件绑定函数，用于注册addEventListener
+   * @param target HTMLDivElement
+   * @returns (event: MouseEvent) => void
+   */
   changeWindowSize = (target: HTMLDivElement) => {
     const direction = target.dataset.direction || '';
     const desktop = document.querySelector<HTMLDivElement>('#os-desktop');
@@ -97,7 +102,6 @@ class Window extends Component<IWindowProps, IWindowState> {
       const { clientX, clientY } = event;
       let movedX = clientX - this.startMoveX;
       const movedY = clientY - this.startMoveY;
-      console.log(movedX, movedY)
   
       if (direction.includes('right')) {
         let width = this.currentW + movedX;
@@ -157,6 +161,49 @@ class Window extends Component<IWindowProps, IWindowState> {
   }
 
   /**
+   * 获取窗口移动的事件绑定函数，用于注册addEventListener
+   * @param target HTMLDivElement
+   * @returns (event: MouseEvent) => void
+   */
+  getWindowTranslateHandler = (target: HTMLDivElement) => {
+    const div = this.element.current as HTMLDivElement;
+    const desktop = document.querySelector<HTMLDivElement>('#os-desktop');
+    const docker = document.querySelector<HTMLDivElement>('#os-docker');
+    return (event: MouseEvent) => {
+      if (!div || !desktop || !docker) {
+        return;
+      }
+
+      const { clientX, clientY } = event;
+      let movedX = clientX - this.startMoveX;
+      const movedY = clientY - this.startMoveY;
+
+      let left = this.currentLeft + movedX;
+      // 右侧边界判断
+      if (left + this.currentW > desktop.offsetWidth) {
+        left = desktop.offsetWidth - this.currentW;
+      }
+      // 左侧边界判断
+      else if (left < 0) {
+        left = 0;
+      }
+
+      let top = this.currentTop + movedY;
+      // 顶部边界判断
+      if (top < STATUS_BAR_HEIGHT) {
+        top = STATUS_BAR_HEIGHT
+      }
+      // 底部边界判断
+      else if (top + this.currentH > desktop.offsetHeight - docker.offsetHeight) {
+        top = desktop.offsetHeight - docker.offsetHeight - this.currentH;
+      }
+
+      this.setState({ top, left });
+
+    }
+  }
+
+  /**
    * 给触发线添加鼠标移动事件，并且在document的mouseup事件触发时移除鼠标事件
    * @param e event
    */
@@ -164,7 +211,19 @@ class Window extends Component<IWindowProps, IWindowState> {
     this.startMoveX = e.clientX;
     this.startMoveY = e.clientY;
     this.setState({ selectDisabled: true })
-    const eventHandler = this.changeWindowSize(e.currentTarget);
+    let eventHandler: (event: MouseEvent) => void;
+    const type = e.currentTarget.dataset.type;
+    if (type === 'scale') {
+      eventHandler = this.changeWindowSize(e.currentTarget);
+    }
+    else {
+      if (Array.from((e.target as HTMLElement).classList).includes(headerClassName)) {
+        eventHandler = this.getWindowTranslateHandler(e.currentTarget);
+      }
+      else {
+        eventHandler = () => {};
+      }
+    }
     document.addEventListener('mousemove', eventHandler);
     const _this = this;
     // 缩放完成，移除document上添加的事件，还原记录的位置数据
@@ -186,8 +245,6 @@ class Window extends Component<IWindowProps, IWindowState> {
     const {
       className,
       style,
-      defaultWidth,
-      defualtHeight,
       children
     } = this.props;
     const { width, height, top, left, selectDisabled } = this.state;
@@ -198,8 +255,7 @@ class Window extends Component<IWindowProps, IWindowState> {
       left,
       userSelect: selectDisabled ? 'none': 'initial'
     });
-    // console.log(children)
-    // TODO children.type.displayName === 'Window.Header'
+
     return (
       <div
         className={classnames(
@@ -208,16 +264,18 @@ class Window extends Component<IWindowProps, IWindowState> {
         )}
         style={styleProps}
         ref={this.element}
+        onMouseDown={this.addMouseMoveEvent}
+        data-type="translate"
       >
         {/* 缩放窗口触发DOM */}
-        <div className={prefix + '__line left'} data-direction="left" onMouseDown={this.addMouseMoveEvent}></div>
-        <div className={prefix + '__line right'} data-direction="right" onMouseDown={this.addMouseMoveEvent}></div>
-        <div className={prefix + '__line top'} data-direction="top" onMouseDown={this.addMouseMoveEvent}></div>
-        <div className={prefix + '__line bottom'} data-direction="bottom" onMouseDown={this.addMouseMoveEvent}></div>
-        <div className={prefix + '__line left-top'} data-direction="left-top" onMouseDown={this.addMouseMoveEvent}></div>
-        <div className={prefix + '__line right-top'} data-direction="right-top" onMouseDown={this.addMouseMoveEvent}></div>
-        <div className={prefix + '__line left-bottom'} data-direction="left-bottom" onMouseDown={this.addMouseMoveEvent}></div>
-        <div className={prefix + '__line right-bottom'} data-direction="right-bottom" onMouseDown={this.addMouseMoveEvent}></div>
+        <div className={prefix + '__line left'} data-direction="left" data-type="scale" onMouseDown={this.addMouseMoveEvent}></div>
+        <div className={prefix + '__line right'} data-direction="right" data-type="scale" onMouseDown={this.addMouseMoveEvent}></div>
+        <div className={prefix + '__line top'} data-direction="top" data-type="scale" onMouseDown={this.addMouseMoveEvent}></div>
+        <div className={prefix + '__line bottom'} data-direction="bottom" data-type="scale" onMouseDown={this.addMouseMoveEvent}></div>
+        <div className={prefix + '__line left-top'} data-direction="left-top" data-type="scale" onMouseDown={this.addMouseMoveEvent}></div>
+        <div className={prefix + '__line right-top'} data-direction="right-top" data-type="scale" onMouseDown={this.addMouseMoveEvent}></div>
+        <div className={prefix + '__line left-bottom'} data-direction="left-bottom" data-type="scale" onMouseDown={this.addMouseMoveEvent}></div>
+        <div className={prefix + '__line right-bottom'} data-direction="right-bottom" data-type="scale" onMouseDown={this.addMouseMoveEvent}></div>
         {children}
       </div>
     )
