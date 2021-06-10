@@ -48,9 +48,9 @@ class AppComponent extends Component<any, IAppState> {
           <Popup visible={this.s.showPopup} style={{ left: 100, top: 200 }}>
             asdfasdf
           </Popup>
-          <Window>
-            <Window.Header>
-            </Window.Header>
+          <Window
+            headerContent={(<div>window窗口组件</div>)}
+          >
             <div>
               this is a window
             </div>

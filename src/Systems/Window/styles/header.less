@@ -3,8 +3,14 @@
 .@{prefix} {
   padding: 3px 10px;
   background-color: #fff;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
   &__handers {
+    padding-right: 5px;
     display: inline-block;
+    display: flex;
+    align-items: center;
     &_close, &_shrink, &_magnify {
       width: 13px;
       height: 13px;
@@ -37,5 +43,7 @@
       background-color: #26ca3f;
     }
   }
-
+  &__content {
+    // flex: 1;
+  }
 }

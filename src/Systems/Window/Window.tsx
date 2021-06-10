@@ -7,10 +7,10 @@
 import React, { Component, CSSProperties } from 'react';
 import classnames from 'classnames';
 
-import Header, { prefix as headerClassName } from './Header';
+import Header, { IHeaderEvents } from './Header';
 
 const prefix = 'os-window';
-interface IWindowProps {
+interface IWindowProps extends IHeaderEvents {
   className?: string;
   style?: CSSProperties;
   /** 窗口默认宽度 */
@@ -21,6 +21,9 @@ interface IWindowProps {
   minWidth?: number;
   /** 窗口最小高度 */
   minHeight?: number;
+  headerClass?: string;
+  headerStyle?: CSSProperties;
+  headerContent?: React.ReactNode;
 }
 interface IWindowState {
   width: number;
@@ -30,9 +33,6 @@ interface IWindowState {
   /** 窗口正在缩放或移动中时，禁止窗口内部的内容被选中 */
   selectDisabled: boolean;
 }
-
-// TODO
-// head和footer自定义功能
 
 const DEFAULT_WIDTH = 700;
 const DEFAULT_HEIGHT = 500;
@@ -208,22 +208,20 @@ class Window extends Component<IWindowProps, IWindowState> {
    * @param e event
    */
   addMouseMoveEvent = (e: React.MouseEvent<HTMLDivElement>) => {
+    const type = (e.target as HTMLDivElement).dataset.type;
+    if (!type) return;
+
     this.startMoveX = e.clientX;
     this.startMoveY = e.clientY;
     this.setState({ selectDisabled: true })
-    let eventHandler: (event: MouseEvent) => void;
-    const type = e.currentTarget.dataset.type;
+    let eventHandler: (event: MouseEvent) => void = () => {};
     if (type === 'scale') {
       eventHandler = this.changeWindowSize(e.currentTarget);
     }
-    else {
-      if (Array.from((e.target as HTMLElement).classList).includes(headerClassName)) {
-        eventHandler = this.getWindowTranslateHandler(e.currentTarget);
-      }
-      else {
-        eventHandler = () => {};
-      }
+    else if ('translate' === type) {
+      eventHandler = this.getWindowTranslateHandler(e.currentTarget);
     }
+
     document.addEventListener('mousemove', eventHandler);
     const _this = this;
     // 缩放完成，移除document上添加的事件，还原记录的位置数据
@@ -241,11 +239,35 @@ class Window extends Component<IWindowProps, IWindowState> {
     document.addEventListener('mouseup', removeEvent);
   }
 
+  renderHeader = () => {
+    const {
+      headerClass,
+      headerContent,
+      headerStyle,
+      onShrink,
+      onMagnify,
+      onClose
+    } = this.props;
+    return (
+      <Window.Header
+        style={headerStyle}
+        className={headerClass}
+        onMouseDown={this.addMouseMoveEvent}
+        data-type="translate"
+        onShrink={onShrink}
+        onMagnify={onMagnify}
+        onClose={onClose}
+      >
+        {headerContent}
+      </Window.Header>
+    )
+  }
+
   render() {
     const {
       className,
       style,
-      children
+      children,
     } = this.props;
     const { width, height, top, left, selectDisabled } = this.state;
     const styleProps = Object.assign({}, style, {
@@ -264,8 +286,6 @@ class Window extends Component<IWindowProps, IWindowState> {
         )}
         style={styleProps}
         ref={this.element}
-        onMouseDown={this.addMouseMoveEvent}
-        data-type="translate"
       >
         {/* 缩放窗口触发DOM */}
         <div className={prefix + '__line left'} data-direction="left" data-type="scale" onMouseDown={this.addMouseMoveEvent}></div>
@@ -276,6 +296,7 @@ class Window extends Component<IWindowProps, IWindowState> {
         <div className={prefix + '__line right-top'} data-direction="right-top" data-type="scale" onMouseDown={this.addMouseMoveEvent}></div>
         <div className={prefix + '__line left-bottom'} data-direction="left-bottom" data-type="scale" onMouseDown={this.addMouseMoveEvent}></div>
         <div className={prefix + '__line right-bottom'} data-direction="right-bottom" data-type="scale" onMouseDown={this.addMouseMoveEvent}></div>
+        {this.renderHeader()}
         {children}
       </div>
     )
