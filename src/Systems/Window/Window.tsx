@@ -24,6 +24,7 @@ interface IWindowProps extends IHeaderEvents {
   headerClass?: string;
   headerStyle?: CSSProperties;
   headerContent?: React.ReactNode;
+  onClick: React.MouseEventHandler<HTMLDivElement>;
 }
 interface IWindowState {
   width: number;
@@ -248,6 +249,7 @@ class Window extends Component<IWindowProps, IWindowState> {
       onMagnify,
       onClose
     } = this.props;
+    // TODO 最小化、最大化时不需要通知外部，关闭后通过回调告知外部清理数据
     return (
       <Window.Header
         style={headerStyle}
@@ -268,6 +270,7 @@ class Window extends Component<IWindowProps, IWindowState> {
       className,
       style,
       children,
+      onClick
     } = this.props;
     const { width, height, top, left, selectDisabled } = this.state;
     const styleProps = Object.assign({}, style, {
@@ -286,6 +289,7 @@ class Window extends Component<IWindowProps, IWindowState> {
         )}
         style={styleProps}
         ref={this.element}
+        onClick={onClick}
       >
         {/* 缩放窗口触发DOM */}
         <div className={prefix + '__line left'} data-direction="left" data-type="scale" onMouseDown={this.addMouseMoveEvent}></div>
@@ -297,7 +301,9 @@ class Window extends Component<IWindowProps, IWindowState> {
         <div className={prefix + '__line left-bottom'} data-direction="left-bottom" data-type="scale" onMouseDown={this.addMouseMoveEvent}></div>
         <div className={prefix + '__line right-bottom'} data-direction="right-bottom" data-type="scale" onMouseDown={this.addMouseMoveEvent}></div>
         {this.renderHeader()}
-        {children}
+        <div className={prefix + '__content'}>
+          {children}
+        </div>
       </div>
     )
   }

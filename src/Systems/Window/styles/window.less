@@ -6,6 +6,8 @@
   border-radius: 2px;
   overflow: hidden;
   position: absolute;
+  display: flex;
+  flex-direction: column;
   &__line {
     position: absolute;
     background-color: transparent;
@@ -77,5 +79,8 @@
         cursor: nwse-resize;
       }
     }
+  }
+  &__content {
+    flex: 1;
   }
 }
