@@ -1,0 +1,40 @@
+@prefix: ~'os-app-todo';
+
+.@{prefix} {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  &__menu {
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+    border-bottom: 1px solid #eee;
+    color: #666;
+    li {
+      float: left;
+      width: 50%;
+      text-align: center;
+      box-sizing: border-box;
+      cursor: pointer;
+    }
+    li:first-of-type {
+      border-right: 1px solid #eee;
+      background-color: #d6e4ff;
+      &.active {
+        background-color: #85a5ff;
+        color: #fff;
+      }
+    }
+    li:last-of-type {
+      background-color: #d9f7be;
+      &.active {
+        background-color: #95de64;
+        color: #fff;
+      }
+    }
+  }
+}
+
+.@{prefix}__window_header {
+  background-color: #ddd;
+}

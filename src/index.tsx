@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import App from './App';
 import components from './components';
-
+import 'antd/dist/antd.css';
 import './assets/styles/index.less';
 
 window.$os = {

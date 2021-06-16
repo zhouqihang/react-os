@@ -6,6 +6,7 @@ import DockerBar from './Systems/DockerBar';
 import Popup from './components/Popup';
 import Window from './Systems/Window'
 import SystemMenu from './Systems/SystemMenu';
+import defaultApps from './apps';
 
 import App, { IApp } from './services/App';
 
@@ -45,16 +46,8 @@ class AppComponent extends Component<any, IAppState> {
     return (
       <>
         <Desktop background="/desktops/1.jpg" id="os-desktop">
-          <Popup visible={this.s.showPopup} style={{ left: 100, top: 200 }}>
-            asdfasdf
-          </Popup>
-          <Window
-            headerContent={(<div>window窗口组件</div>)}
-          >
-            <div>
-              this is a window
-            </div>
-          </Window>
+          <defaultApps.TodoList>
+          </defaultApps.TodoList>
         </Desktop>
         <StatusBar id="os-statusbar"></StatusBar>
         <DockerBar apps={apps} activeAppIds={[]}></DockerBar>

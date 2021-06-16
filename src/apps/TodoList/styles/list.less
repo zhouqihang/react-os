@@ -1,0 +1,39 @@
+@prefix: ~'os-app-todo_list';
+.@{prefix} {
+  li {
+    padding: 10px 20px;
+  }
+  .@{prefix}__item {
+    border-bottom: 1px solid red;
+    display: flex;
+    align-items: center;
+    h4 {
+      margin: 0 0 15px 0;
+    }
+    p {
+      margin: 0 0 10px 0;
+    }
+    &_content {
+      color: #999;
+    }
+    &_time {
+      font-size: 12px;
+      color: #ccc;
+    }
+    .content {
+      flex: 1;
+    }
+    .done {
+      cursor: pointer;
+      font-size: 25px;
+    }
+  }
+  .@{prefix}__form {
+    .item {
+      margin: 5px 0;
+    }
+  }
+  .@{prefix}__create {
+
+  }
+}
