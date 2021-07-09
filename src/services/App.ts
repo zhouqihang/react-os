@@ -1,15 +1,17 @@
 export interface IApp {
   name: string;
   icon: string;
-  namespace: string
+  namespace: string;
+  component?: React.ComponentType;
 }
 
 let id = 0;
 
-export default class App implements IApp {
-  public name: string;
-  public icon: string;
-  public namespace: string;
+export default class App {
+  public readonly name: string;
+  public readonly icon: string;
+  public readonly namespace: string;
+  public readonly component?: React.ComponentType;
 
   protected id: number | null = null;
 
@@ -17,9 +19,11 @@ export default class App implements IApp {
     this.name = app.name;
     this.icon = app.icon;
     this.namespace = app.namespace;
+    this.component = app.component;
   }
 
-  public launch() {
-    
+  public getComponent() {
+    const Component = this.component;
+    return this.component
   }
 }

@@ -15,6 +15,7 @@ import systemApps from './configs/systemApps';
 interface IAppState {
   apps: App[];
   showPopup: boolean;
+  launchdAppInstances: React.ReactNode[];
 }
 
 class AppComponent extends Component<any, IAppState> {
@@ -25,6 +26,7 @@ class AppComponent extends Component<any, IAppState> {
     this.state = {
       apps: this.initApps(),
       showPopup: true,
+      launchdAppInstances: []
     };
     const _this = this;
 
@@ -42,15 +44,18 @@ class AppComponent extends Component<any, IAppState> {
   }
 
   render() {
-    const { apps } = this.s;
+    const { apps, launchdAppInstances } = this.s;
     return (
       <>
         <Desktop background="/desktops/1.jpg" id="os-desktop">
-          <defaultApps.TodoList>
-          </defaultApps.TodoList>
+          {/* <defaultApps.TodoList>
+          </defaultApps.TodoList> */}
+          {
+            launchdAppInstances
+          }
         </Desktop>
         <StatusBar id="os-statusbar"></StatusBar>
-        <DockerBar apps={apps} activeAppIds={[]}></DockerBar>
+        <DockerBar apps={apps} activeAppIds={[]} onClick={this.launchApp}></DockerBar>
       </>
     )
   }
@@ -60,6 +65,14 @@ class AppComponent extends Component<any, IAppState> {
 
   initApps() {
     return systemApps.map(item => new App(item));
+  }
+
+  launchApp = (app: App) => {
+    console.log('start app: ' + app.name);
+    const ComponentClass = app.getComponent();
+    // @ts-ignore
+    const instance = <ComponentClass key={app.namespace} />
+    this.s.launchdAppInstances = [instance];
   }
 }
 
