@@ -4,7 +4,9 @@ export default [
   {
     "name": "启动台",
     "icon": "icons-launchpad",
-    "namespace": "react_os_launchpad"
+    "namespace": "react_os_launchpad",
+    // TODO 启动台组件比较特殊，先用TODOList占位
+    "component": TodoList
   },
   {
     "name": "待办事项",

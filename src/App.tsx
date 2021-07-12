@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, RefObject } from 'react';
 
 import Desktop from './Systems/Desktop';
 import StatusBar from './Systems/StatusBar';
@@ -15,18 +15,24 @@ import systemApps from './configs/systemApps';
 interface IAppState {
   apps: App[];
   showPopup: boolean;
-  launchdAppInstances: React.ReactNode[];
+  launchdAppInstances: React.ReactElement[];
+  currentActiveAppInstance?: React.ReactElement;
 }
 
 class AppComponent extends Component<any, IAppState> {
   protected s: IAppState;
+
+  protected launchdAppMaps: Map<React.ReactElement, App> = new Map();
+  protected launchdAppRefMaps: Map<React.ReactElement, any> = new Map();
+  protected launchdAppIdMaps: Map<number, React.ReactElement> = new Map();
 
   constructor(props: any) {
     super(props);
     this.state = {
       apps: this.initApps(),
       showPopup: true,
-      launchdAppInstances: []
+      launchdAppInstances: [],
+      currentActiveAppInstance: undefined
     };
     const _this = this;
 
@@ -44,14 +50,17 @@ class AppComponent extends Component<any, IAppState> {
   }
 
   render() {
-    const { apps, launchdAppInstances } = this.s;
+    const { apps, launchdAppInstances, currentActiveAppInstance } = this.s;
     return (
       <>
         <Desktop background="/desktops/1.jpg" id="os-desktop">
-          {/* <defaultApps.TodoList>
-          </defaultApps.TodoList> */}
           {
-            launchdAppInstances
+            launchdAppInstances.map((instance, index) => {
+              return React.cloneElement(instance, {
+                zIndex: instance === currentActiveAppInstance ? launchdAppInstances.length * 100 : index * 100,
+                ref: (node: any) => this.launchdAppRefMaps.set(instance, node)
+              })
+            })
           }
         </Desktop>
         <StatusBar id="os-statusbar"></StatusBar>
@@ -70,9 +79,42 @@ class AppComponent extends Component<any, IAppState> {
   launchApp = (app: App) => {
     console.log('start app: ' + app.name);
     const ComponentClass = app.getComponent();
-    // @ts-ignore
-    const instance = <ComponentClass key={app.namespace} />
-    this.s.launchdAppInstances = [instance];
+    const id = app.getInstanceId();
+
+    const instance = (<ComponentClass
+      key={app.namespace + id}
+      onWindowClick={() => this.changeActiveInstance(instance)}
+      
+    />);
+    // ref={(node: any) => this.launchdAppRefMaps.set(instance, node)}
+
+    console.log(instance)
+
+    // TODO
+    this.launchdAppMaps.set(instance, app);
+    this.launchdAppIdMaps.set(id, instance);
+
+    this.s.launchdAppInstances = this.s.launchdAppInstances.concat(instance);
+    this.s.currentActiveAppInstance = instance;
+  }
+
+  changeActiveInstance = (instance: React.ReactElement) => {
+    if (instance === this.s.currentActiveAppInstance) {
+      return;
+    }
+
+    const app = this.launchdAppMaps.get(instance) as App;
+    this.s.currentActiveAppInstance = instance;
+    console.log('app actived: ' + app.name);
+
+    try {
+      // TODO 设置菜单
+      const refObj = this.launchdAppRefMaps.get(instance);
+      refObj.appActived();
+    } catch (err) {
+      // nothing
+      console.error(err);
+    }
   }
 }
 

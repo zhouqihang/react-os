@@ -6,6 +6,7 @@
  */
 import React, { Component, CSSProperties } from 'react';
 import classnames from 'classnames';
+import ReactOSApp from '../../services/ReactOSApp';
 import Window from '../../Systems/Window';
 import List, { IList } from './List';
 import Icon from '../../components/Icon';
@@ -15,13 +16,16 @@ type menuType = 'todo' | 'done';
 type statusType = menuType;
 
 interface ITodoListProps {
+  onWindowClick?: React.MouseEventHandler<HTMLDivElement>;
+  zIndex?: number;
 }
 
 interface ITodoListState {
   type: menuType;
   list: IList[];
 }
-class TodoList extends Component<ITodoListProps, ITodoListState> {
+class TodoList extends Component<ITodoListProps, ITodoListState> implements ReactOSApp {
+  instanceId: number = 0;
 
   constructor(props: ITodoListProps) {
     super(props);
@@ -29,6 +33,10 @@ class TodoList extends Component<ITodoListProps, ITodoListState> {
       type: 'todo',
       list: []
     }
+  }
+
+  appActived = () => {
+    console.log('todo list actived');
   }
 
   changeType = (e: React.MouseEvent<HTMLLIElement>) => {
@@ -60,9 +68,13 @@ class TodoList extends Component<ITodoListProps, ITodoListState> {
     // const { className, style } = this.props;
     const { type, list } = this.state;
     const currentList = list.filter(item => item.status === type);
+    const { onWindowClick, zIndex } = this.props;
+
     return (
       <Window
         headerClass={prefix + '__window_header'}
+        onSelected={onWindowClick}
+        style={{ zIndex }}
       >
         <div className={prefix}>
           <ul className={prefix + '__menu'}>

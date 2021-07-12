@@ -25,6 +25,7 @@ interface IWindowProps extends IHeaderEvents {
   headerStyle?: CSSProperties;
   headerContent?: React.ReactNode;
   onClick: React.MouseEventHandler<HTMLDivElement>;
+  onSelected: React.MouseEventHandler<HTMLDivElement>;
 }
 interface IWindowState {
   width: number;
@@ -270,7 +271,8 @@ class Window extends Component<IWindowProps, IWindowState> {
       className,
       style,
       children,
-      onClick
+      onClick,
+      onSelected
     } = this.props;
     const { width, height, top, left, selectDisabled } = this.state;
     const styleProps = Object.assign({}, style, {
@@ -290,6 +292,7 @@ class Window extends Component<IWindowProps, IWindowState> {
         style={styleProps}
         ref={this.element}
         onClick={onClick}
+        onMouseDown={onSelected}
       >
         {/* 缩放窗口触发DOM */}
         <div className={prefix + '__line left'} data-direction="left" data-type="scale" onMouseDown={this.addMouseMoveEvent}></div>

@@ -2,7 +2,7 @@ export interface IApp {
   name: string;
   icon: string;
   namespace: string;
-  component?: React.ComponentType;
+  component: React.ComponentType;
 }
 
 let id = 0;
@@ -11,7 +11,7 @@ export default class App {
   public readonly name: string;
   public readonly icon: string;
   public readonly namespace: string;
-  public readonly component?: React.ComponentType;
+  readonly component: React.ComponentType<any>;
 
   protected id: number | null = null;
 
@@ -22,8 +22,12 @@ export default class App {
     this.component = app.component;
   }
 
-  public getComponent() {
-    const Component = this.component;
-    return this.component
+  public getComponent(): React.ComponentType<any> {
+    this.id = ++id;
+    return this.component;
+  }
+
+  public getInstanceId() {
+    return this.id as number;
   }
 }

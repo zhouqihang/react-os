@@ -36,8 +36,6 @@ interface IListProps {
 const List: FunctionComponent<IListProps> = (props) => {
   const { className, style, addItem, datas, current, onOk } = props;
 
-  console.log(datas)
-
   const {
     showAdd,
     title,

@@ -7,7 +7,7 @@ import cn from 'classnames';
 import Icon from '../../components/Icon';
 import { IApp } from '../../services/App';
 
-export interface IDockerItemProps extends IApp {
+export interface IDockerItemProps extends Omit<IApp, 'component'> {
   active?: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
 }
