@@ -39,6 +39,40 @@ class TodoList extends Component<ITodoListProps, ITodoListState> implements Reac
     console.log('todo list actived');
   }
 
+  /**
+   * rewrite ReactOSApp
+   * @returns 
+   */
+  getAppMenu = () => {
+    return [
+      {
+        id: '1',
+        content: '待办事项',
+        menus: [
+          {
+            id: '1-1',
+            content: '关于'
+          }
+        ]
+      },
+      {
+        id: '2',
+        content: '文件',
+        menus: [
+          {
+            id: '2-1',
+            content: '新建待办事项'
+          }
+        ]
+      },
+      {
+        id: '3',
+        content: '帮助',
+        menus: []
+      }
+    ]
+  }
+
   changeType = (e: React.MouseEvent<HTMLLIElement>) => {
     const type = e.currentTarget.dataset.type;
     this.setState({

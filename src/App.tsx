@@ -22,11 +22,9 @@ interface IAppState {
 }
 
 class AppComponent extends Component<any, IAppState> {
-  protected s: IAppState;
 
   protected launchdAppMaps: Map<React.ReactElement, App> = new Map();
   protected launchdAppRefMaps: Map<React.ReactElement, any> = new Map();
-  protected launchdAppIdMaps: Map<number, React.ReactElement> = new Map();
 
   private systemMenu: appMenuBarMenus = [
     {
@@ -76,22 +74,10 @@ class AppComponent extends Component<any, IAppState> {
       currentMenuList: this.systemMenu
     };
     const _this = this;
-
-    this.s = new Proxy<IAppState>(this.state, {
-      get: function (target, property, receiver) {
-        return Reflect.get(target, property, receiver);
-      },
-      set: function (target, property, value) {
-        Reflect.set(target, property, value);
-        // @ts-ignore
-        _this.setState({ [property]: value });
-        return true;
-      }
-    });
   }
 
   render() {
-    const { apps, launchdAppInstances, currentActiveAppInstance, currentMenuList } = this.s;
+    const { apps, launchdAppInstances, currentActiveAppInstance, currentMenuList } = this.state;
     return (
       <>
         <Desktop background="/desktops/1.jpg" id="os-desktop">
@@ -125,33 +111,35 @@ class AppComponent extends Component<any, IAppState> {
     const instance = (<ComponentClass
       key={app.namespace + id}
       onWindowClick={() => this.changeActiveInstance(instance)}
-      
     />);
-    // ref={(node: any) => this.launchdAppRefMaps.set(instance, node)}
 
-    console.log(instance)
-
-    // TODO
     this.launchdAppMaps.set(instance, app);
-    this.launchdAppIdMaps.set(id, instance);
-
-    this.s.launchdAppInstances = this.s.launchdAppInstances.concat(instance);
-    this.s.currentActiveAppInstance = instance;
+    this.setState({
+      launchdAppInstances: this.state.launchdAppInstances.concat(instance),
+      currentActiveAppInstance: instance
+    }, () => {
+      // 触发生命周期
+      const refObj = this.launchdAppRefMaps.get(instance);
+      refObj.appActived();
+      this.setState({
+        currentMenuList: refObj.getAppMenu()
+      });
+    })
   }
 
   changeActiveInstance = (instance: React.ReactElement) => {
-    if (instance === this.s.currentActiveAppInstance) {
+    if (instance === this.state.currentActiveAppInstance) {
       return;
     }
 
     const app = this.launchdAppMaps.get(instance) as App;
-    this.s.currentActiveAppInstance = instance;
+    this.setState({ currentActiveAppInstance: instance });
     console.log('app actived: ' + app.name);
 
     try {
-      // TODO 设置菜单
       const refObj = this.launchdAppRefMaps.get(instance);
       refObj.appActived();
+      this.setState({ currentMenuList: refObj.getAppMenu() });
     } catch (err) {
       // nothing
       console.error(err);
