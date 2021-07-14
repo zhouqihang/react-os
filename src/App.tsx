@@ -91,7 +91,7 @@ class AppComponent extends Component<any, IAppState> {
           }
         </Desktop>
         <StatusBar id="os-statusbar" menus={currentMenuList}></StatusBar>
-        <DockerBar apps={apps} activeAppIds={[]} onClick={this.launchApp}></DockerBar>
+        <DockerBar apps={apps} activeAppNamespace={this.getActivedAppInstances()} onClick={this.launchApp}></DockerBar>
       </>
     )
   }
@@ -144,6 +144,16 @@ class AppComponent extends Component<any, IAppState> {
       // nothing
       console.error(err);
     }
+  }
+
+  getActivedAppInstances = () => {
+    return this.state.launchdAppInstances.map(instance => {
+      const app = this.launchdAppMaps.get(instance)
+      if (!app) {
+        return '';
+      }
+      return app.namespace;
+    })
   }
 }
 
