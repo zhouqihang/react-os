@@ -10,7 +10,7 @@ export default [
   },
   {
     "name": "待办事项",
-    "icon": "icons-launchpad",
+    "icon": "backlog",
     "namespace": "react_os_todos",
     "component": TodoList
   }

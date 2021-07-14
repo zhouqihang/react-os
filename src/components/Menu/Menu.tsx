@@ -9,16 +9,9 @@ import classnames from 'classnames';
 import Trigger from '../Trigger';
 import Icon from '../Icon';
 import { glassBackground } from '../../assets/styles/classNames';
+import { menuId, IMenuItem, menuListType } from '../../services/MenuType';
 
 const prefix = 'os-menu';
-type menuId = number | string;
-export interface IMenuItem {
-  id: menuId;
-  content: ReactNode,
-  suffix?: ReactNode,
-  children?: menuListType;
-}
-export type menuListType = Array<IMenuItem | IMenuItem[]>;
 export type handlerType = 'click' | 'hover';
 interface IMenuProps {
   className?: string;

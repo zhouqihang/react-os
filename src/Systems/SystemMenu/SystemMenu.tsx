@@ -7,7 +7,7 @@
 import React, { CSSProperties, PureComponent } from 'react';
 import Trigger from '../../components/Trigger';
 import Menu from '../../components/Menu';
-import { menuListType, IMenuItem } from '../../components/Menu/Menu';
+import { IMenuItem, menuListType } from '../../services/MenuType';
 
 const prefix = 'os-systemMenu';
 

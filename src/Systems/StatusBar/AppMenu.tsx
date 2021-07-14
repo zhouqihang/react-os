@@ -3,16 +3,28 @@
  * @author zhouqihang
  */
 import React from 'react';
+import { menuListType, appMenuBarMenus } from '../../services/MenuType';
+import SystemMenu from '../../Systems/SystemMenu';
 
 const prefix = 'os-appmenu';
 
-const AppMenu: React.FunctionComponent<{}> = function (props) {
+interface IAppMenuProps {
+    menus: appMenuBarMenus;
+}
+
+const AppMenu: React.FunctionComponent<IAppMenuProps> = function (props) {
     return (
+        // <SystemMenu className={prefix} menus={props.menus} />
         <ul className={prefix}>
-            <li className={prefix + '_item hover-bg'}>文件</li>
-            <li className={prefix + '_item hover-bg'}>编辑</li>
-            <li className={prefix + '_item hover-bg'}>关于</li>
-            <li className={prefix + '_item hover-bg'}>帮助</li>
+            {
+                props.menus.map(item => {
+                    return (
+                        <SystemMenu menus={item.menus}>
+                            <li key={item.id} className={prefix + '_item hover-bg'}>{item.content}</li>
+                        </SystemMenu>
+                    )
+                })
+            }
         </ul>
     )
 }

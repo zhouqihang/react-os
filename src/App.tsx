@@ -9,6 +9,7 @@ import SystemMenu from './Systems/SystemMenu';
 import defaultApps from './apps';
 
 import App, { IApp } from './services/App';
+import { appMenuBarMenus } from './services/MenuType';
 
 import systemApps from './configs/systemApps';
 
@@ -17,6 +18,7 @@ interface IAppState {
   showPopup: boolean;
   launchdAppInstances: React.ReactElement[];
   currentActiveAppInstance?: React.ReactElement;
+  currentMenuList: appMenuBarMenus;
 }
 
 class AppComponent extends Component<any, IAppState> {
@@ -26,13 +28,52 @@ class AppComponent extends Component<any, IAppState> {
   protected launchdAppRefMaps: Map<React.ReactElement, any> = new Map();
   protected launchdAppIdMaps: Map<number, React.ReactElement> = new Map();
 
+  private systemMenu: appMenuBarMenus = [
+    {
+      id: '1',
+      content: '文件',
+      menus: [
+        {
+          id: '1-1',
+          content: '新建',
+          children: [
+            {
+              id: '1-1-1',
+              content: '文件'
+            },
+            {
+              id: '1-1-2',
+              content: '文件夹'
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: '2',
+      content: '编辑',
+      menus: []
+    },
+    {
+      id: '3',
+      content: '显示',
+      menus: []
+    },
+    {
+      id: '4',
+      content: '帮助',
+      menus: []
+    }
+  ]
+
   constructor(props: any) {
     super(props);
     this.state = {
       apps: this.initApps(),
       showPopup: true,
       launchdAppInstances: [],
-      currentActiveAppInstance: undefined
+      currentActiveAppInstance: undefined,
+      currentMenuList: this.systemMenu
     };
     const _this = this;
 
@@ -50,7 +91,7 @@ class AppComponent extends Component<any, IAppState> {
   }
 
   render() {
-    const { apps, launchdAppInstances, currentActiveAppInstance } = this.s;
+    const { apps, launchdAppInstances, currentActiveAppInstance, currentMenuList } = this.s;
     return (
       <>
         <Desktop background="/desktops/1.jpg" id="os-desktop">
@@ -63,7 +104,7 @@ class AppComponent extends Component<any, IAppState> {
             })
           }
         </Desktop>
-        <StatusBar id="os-statusbar"></StatusBar>
+        <StatusBar id="os-statusbar" menus={currentMenuList}></StatusBar>
         <DockerBar apps={apps} activeAppIds={[]} onClick={this.launchApp}></DockerBar>
       </>
     )
