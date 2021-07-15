@@ -13,6 +13,8 @@ import { appMenuBarMenus } from './services/MenuType';
 
 import systemApps from './configs/systemApps';
 
+import { containElement } from './utils/contain';
+
 interface IAppState {
   apps: App[];
   showPopup: boolean;
@@ -97,6 +99,13 @@ class AppComponent extends Component<any, IAppState> {
   }
 
   componentDidMount() {
+    // 添加鼠标按下事件
+    document.addEventListener('mousedown', this.documentMouseDownHandler);
+  }
+
+  componentWillUnmount() {
+    // 组件销毁前移除事件
+    document.removeEventListener('mousedown', this.documentMouseDownHandler);
   }
 
   initApps() {
@@ -154,6 +163,21 @@ class AppComponent extends Component<any, IAppState> {
       }
       return app.namespace;
     })
+  }
+
+  documentMouseDownHandler = (e: MouseEvent) => {
+    // 切换应用菜单与系统菜单
+    // 如果点击的不是一个具体的窗口(Window组件类型)则显示系统菜单
+    if (
+      !containElement(e.target as HTMLElement, function (node) {
+        return node.dataset.type === 'window';
+      })
+    ) {
+      this.setState({
+        currentActiveAppInstance: undefined,
+        currentMenuList: this.systemMenu
+      })
+    }
   }
 }
 

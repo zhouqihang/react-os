@@ -65,6 +65,7 @@ class Desktop extends PureComponent<IDesktopProps, IDesktopState> {
                 style={Object.assign({ background: this.getBackgroundString() }, backgroundStyle)}
                 className={prefix}
                 {...others}
+                data-type="desktop"
             >
                 {children}
             </section>

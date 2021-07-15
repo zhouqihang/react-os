@@ -293,6 +293,7 @@ class Window extends Component<IWindowProps, IWindowState> {
         ref={this.element}
         onClick={onClick}
         onMouseDown={onSelected}
+        data-type="window"
       >
         {/* 缩放窗口触发DOM */}
         <div className={prefix + '__line left'} data-direction="left" data-type="scale" onMouseDown={this.addMouseMoveEvent}></div>
