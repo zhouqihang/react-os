@@ -170,7 +170,7 @@ class AppComponent extends Component<any, IAppState> {
     // 如果点击的不是一个具体的窗口(Window组件类型)则显示系统菜单
     if (
       !containElement(e.target as HTMLElement, function (node) {
-        return node.dataset.type === 'window';
+        return ['window', 'statusbar'].includes(node.dataset.type || '');
       })
     ) {
       this.setState({

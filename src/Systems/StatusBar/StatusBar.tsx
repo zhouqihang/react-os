@@ -24,7 +24,7 @@ class StatusBar extends PureComponent<React.HTMLAttributes<HTMLElement> & IStatu
 
     render() {
         return (
-            <section className={classnames(prefix, glassBackground)} {...this.props}>
+            <section className={classnames(prefix, glassBackground)} {...this.props} data-type="statusbar">
                 <div className="system-menu hover-bg">
                     <Icon name="Apple" />
                 </div>
